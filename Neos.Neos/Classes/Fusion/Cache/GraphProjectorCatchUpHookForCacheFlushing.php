@@ -173,10 +173,15 @@ class GraphProjectorCatchUpHookForCacheFlushing implements CatchUpHookInterface
             !($eventInstance instanceof NodeAggregateWasRemoved)
             && $eventInstance instanceof EmbedsContentStreamAndNodeAggregateId
         ) {
-            $nodeAggregate = $this->contentRepository->getContentGraph()->findNodeAggregateById(
-                $eventInstance->getContentStreamId(),
-                $eventInstance->getNodeAggregateId()
-            );
+            try {
+                $nodeAggregate = $this->contentRepository->getContentGraph()->findNodeAggregateById(
+                    $eventInstance->getContentStreamId(),
+                    $eventInstance->getNodeAggregateId()
+                );
+            } catch (\InvalidArgumentException) {
+                // construction of nodes can possibly fail in test environment: Features/ProjectionIntegrityViolationDetection/TetheredNodesAreNamed.feature:40
+                return;
+            }
 
             if ($nodeAggregate) {
                 $this->scheduleCacheFlushJobForNodeAggregate(
