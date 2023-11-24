@@ -14,8 +14,6 @@ declare(strict_types=1);
 
 namespace Neos\ContentRepository\BehavioralTests\TestSuite\Behavior;
 
-use Behat\Gherkin\Node\PyStringNode;
-use JsonException;
 use Neos\ContentRepository\Core\Factory\ContentRepositoryId;
 use Neos\ContentRepository\Core\NodeType\NodeLabelGeneratorFactoryInterface;
 use Neos\ContentRepository\Core\NodeType\NodeLabelGeneratorInterface;
@@ -23,7 +21,6 @@ use Neos\ContentRepository\Core\NodeType\NodeType;
 use Neos\ContentRepository\Core\NodeType\NodeTypeManager;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\ContentRepositoryRegistry\Factory\NodeTypeManager\NodeTypeManagerFactoryInterface;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Factory for node type managers from gherkin py strings
@@ -41,7 +38,7 @@ final class GherkinPyStringNodeBasedNodeTypeManagerFactory implements NodeTypeMa
         $nodeTypesConfigurationJson = file_get_contents(self::cacheFileName($contentRepositoryId));
         try {
             $nodeTypesConfiguration = json_decode($nodeTypesConfigurationJson, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
+        } catch (\JsonException $e) {
             throw new \RuntimeException(sprintf('Failed to parse JSON for node types configuration: %s', $nodeTypesConfigurationJson));
         }
         return new NodeTypeManager(
