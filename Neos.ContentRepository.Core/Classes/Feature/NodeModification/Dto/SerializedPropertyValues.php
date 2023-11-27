@@ -21,6 +21,7 @@ use Neos\ContentRepository\Core\NodeType\NodeType;
  *
  * This means: each "value" must be a simple PHP data type.
  *
+ * TODO ... maybe adjust comment
  * NOTE: if a value is set to NULL in SerializedPropertyValues, this means the key should be unset,
  * because we treat NULL and "not set" the same from an API perspective.
  *
